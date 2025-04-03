@@ -120,10 +120,10 @@
             }
         }
 
-        // Function to get egg ID from URL
+        // Function to get egg ID from URL (updated for alphanumeric IDs)
         function getEggIDFromURL(url) {
-            const match = url.match(/\/view\/(\d+)/);
-            return match ? match[1] : null;  // Return the egg ID (numeric ID) or null if not valid
+            const match = url.match(/\/view\/([a-zA-Z0-9]+)/);
+            return match ? match[1] : null;  // Return the egg ID (alphanumeric ID) or null if not valid
         }
 
         // Event listener for form submission
