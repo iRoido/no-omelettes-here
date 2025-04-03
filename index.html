@@ -14,9 +14,9 @@
         body { 
             font-family: Arial, sans-serif; 
             text-align: center; 
-            background-color: #121212;  /* Dark background */
-            color: #E0E0E0;  /* Light text color */
-            height: 100vh;  /* Ensure it covers the full viewport */
+            background-color: #121212;  
+            color: #E0E0E0;  
+            height: 100vh;  
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -77,6 +77,7 @@
         function loadEggs() {
             const storedEggs = JSON.parse(localStorage.getItem('eggs')) || [];
             storedEggs.forEach(egg => {
+                console.log('Loaded egg:', egg.url); // Debugging: Log loaded eggs
                 displayEgg(egg.url);
             });
         }
@@ -129,6 +130,8 @@
         document.getElementById('eggForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const url = document.getElementById('eggURL').value;
+
+            console.log("Submitted egg URL:", url);  // Debugging: Log the submitted URL
 
             if (url) {
                 // Display the new egg immediately
