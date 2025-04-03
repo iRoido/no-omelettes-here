@@ -24,48 +24,61 @@
     <div id="eggList"></div>
     
     <script>
-        document.getElementById('eggForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const url = document.getElementById('eggURL').value;
+      document.getElementById('eggForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const url = document.getElementById('eggURL').value;
 
-            if (url) {
-                const eggList = document.getElementById('eggList');
-                const eggDiv = document.createElement('div');
-                eggDiv.className = 'egg';
+    if (url) {
+        const eggList = document.getElementById('eggList');
+        const eggDiv = document.createElement('div');
+        eggDiv.className = 'egg';
 
-                // Create a new image element for the egg
-                const img = document.createElement('img');
-                img.src = `https://www.dragcave.net/images/eggs/${getEggImageCode(url)}.png`;
-                img.alt = "Egg Image";
-                img.width = 50;  // Optional: Adjust the size
-                img.height = 50; // Optional: Adjust the size
+        // Get the egg ID from the URL
+        const eggID = getEggIDFromURL(url);
+        
+        if (eggID) {
+            // Make the API request to get the egg details
+            fetch(`https://api.dragcave.net/eggs/${eggID}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Create the image element with the egg image URL
+                    const img = document.createElement('img');
+                    img.src = data.image_url;  // API returns the image URL
+                    img.alt = "Egg Image";
+                    img.width = 50;  // Optional: Adjust the size
+                    img.height = 50; // Optional: Adjust the size
 
-                // Create a link to the egg
-                const eggLink = document.createElement('a');
-                eggLink.href = url;
-                eggLink.target = "_blank";
-                eggLink.textContent = url;
+                    // Create a link to the egg
+                    const eggLink = document.createElement('a');
+                    eggLink.href = url;
+                    eggLink.target = "_blank";
+                    eggLink.textContent = url;
 
-                // Append the image and link to the eggDiv
-                eggDiv.appendChild(img);
-                eggDiv.appendChild(eggLink);
+                    // Append the image and link to the eggDiv
+                    eggDiv.appendChild(img);
+                    eggDiv.appendChild(eggLink);
 
-                // Append eggDiv to the list
-                eggList.appendChild(eggDiv);
-
-                // Clear the input
-                document.getElementById('eggURL').value = '';
-            }
-        });
-
-        // Function to get the egg image code from the URL
-        function getEggImageCode(url) {
-            const match = url.match(/\/view\/(\d+)/);
-            if (match) {
-                return match[1]; // Use the numeric ID from the URL
-            }
-            return '';  // If URL doesn't match expected format
+                    // Append eggDiv to the list
+                    eggList.appendChild(eggDiv);
+                })
+                .catch(error => {
+                    console.error('Error fetching egg data:', error);
+                });
         }
+        
+        // Clear the input
+        document.getElementById('eggURL').value = '';
+    }
+});
+
+// Function to extract egg ID from the URL
+function getEggIDFromURL(url) {
+    const match = url.match(/\/view\/(\d+)/);
+    if (match) {
+        return match[1];  // Return the egg ID (numeric ID)
+    }
+    return null;  // Return null if the URL format is incorrect
+}
     </script>
 </body>
 </html>
