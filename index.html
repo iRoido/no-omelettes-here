@@ -5,13 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>No Omelettes Here</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body { 
             font-family: Arial, sans-serif; 
             text-align: center; 
-            background-color: #121212; 
-            color: #E0E0E0; 
-            margin: 0; 
-            padding: 0;
+            background-color: #121212;  /* Dark background */
+            color: #E0E0E0;  /* Light text color */
+            height: 100vh;  /* Ensure it covers the full viewport */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         h1, p { 
             margin: 20px 0; 
@@ -65,58 +73,76 @@
     <div id="eggList"></div>
     
     <script>
-        document.getElementById('eggForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const url = document.getElementById('eggURL').value;
-            console.log('Submitted Egg URL:', url);  // Debugging log
+        // Load eggs from localStorage
+        function loadEggs() {
+            const storedEggs = JSON.parse(localStorage.getItem('eggs')) || [];
+            storedEggs.forEach(egg => {
+                displayEgg(egg.url);
+            });
+        }
 
-            if (url) {
-                const eggList = document.getElementById('eggList');
-                const eggDiv = document.createElement('div');
-                eggDiv.className = 'egg';
+        // Function to display an egg
+        function displayEgg(url) {
+            const eggList = document.getElementById('eggList');
+            const eggDiv = document.createElement('div');
+            eggDiv.className = 'egg';
 
-                // Get the egg ID from the URL
-                const eggID = getEggIDFromURL(url);
-                console.log('Extracted Egg ID:', eggID);  // Debugging log
-                
-                if (eggID) {
-                    // Generate the egg image URL based on the ID
-                    const eggImageURL = `https://dragcave.net/images/eggs/${eggID}.png`;
+            // Get the egg ID from the URL
+            const eggID = getEggIDFromURL(url);
 
-                    // Create the image element with the egg image URL
-                    const img = document.createElement('img');
-                    img.src = eggImageURL;  // Generated egg image URL
-                    img.alt = "Egg Image";
+            if (eggID) {
+                const eggImageURL = `https://dragcave.net/images/eggs/${eggID}.png`;
 
-                    // Create a link to the egg (if desired)
-                    const eggLink = document.createElement('a');
-                    eggLink.href = url;
-                    eggLink.target = "_blank";
-                    eggLink.textContent = url;
+                // Create the image element with the egg image URL
+                const img = document.createElement('img');
+                img.src = eggImageURL;  // Generated egg image URL
+                img.alt = "Egg Image";
 
-                    // Append the image and link to the eggDiv
-                    eggDiv.appendChild(img);
-                    eggDiv.appendChild(eggLink);
+                // Create a link to the egg
+                const eggLink = document.createElement('a');
+                eggLink.href = url;
+                eggLink.target = "_blank";
+                eggLink.textContent = url;
 
-                    // Append eggDiv to the list
-                    eggList.appendChild(eggDiv);
-                    
-                    // Clear the input
-                    document.getElementById('eggURL').value = '';
-                } else {
-                    console.log('Invalid egg ID format');
-                }
+                // Append the image and link to the eggDiv
+                eggDiv.appendChild(img);
+                eggDiv.appendChild(eggLink);
+
+                // Append eggDiv to the list
+                eggList.appendChild(eggDiv);
             }
-        });
+        }
 
-        // Function to extract egg ID from the URL
+        // Function to get egg ID from URL
         function getEggIDFromURL(url) {
             const match = url.match(/\/view\/(\d+)/);
             if (match) {
                 return match[1];  // Return the egg ID (numeric ID)
             }
-            return null;  // Return null if the URL format is incorrect
+            return null;
         }
+
+        // Event listener for form submission
+        document.getElementById('eggForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = document.getElementById('eggURL').value;
+
+            if (url) {
+                // Display the new egg immediately
+                displayEgg(url);
+
+                // Save the egg to localStorage
+                const storedEggs = JSON.parse(localStorage.getItem('eggs')) || [];
+                storedEggs.push({ url: url });
+                localStorage.setItem('eggs', JSON.stringify(storedEggs));
+
+                // Clear the input field
+                document.getElementById('eggURL').value = '';
+            }
+        });
+
+        // Load eggs when the page loads
+        window.onload = loadEggs;
     </script>
 </body>
 </html>
