@@ -5,84 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>No Omelettes Here</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            background-color: #121212;  
-            color: #E0E0E0;  
-            height: 100vh;  
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        h1, p { 
-            margin: 20px 0; 
-        }
-        #eggList { 
-            margin-top: 20px; 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: center;
-        }
-        .egg { 
-            margin: 10px; 
-            padding: 10px; 
-            border: 1px solid #333; 
-            display: inline-block;
-            background-color: #1E1E1E;
-            border-radius: 8px;
-        }
-        img { 
-            width: 100px; 
-            height: 100px; 
-            border-radius: 5px; 
-            margin-bottom: 10px;
-        }
-        input, button { 
-            padding: 10px; 
-            margin: 10px 0; 
-            border: 1px solid #333; 
-            background-color: #1E1E1E; 
-            color: #E0E0E0;
-            border-radius: 5px;
-        }
-        button { 
-            cursor: pointer; 
-        }
-        button:hover { 
-            background-color: #333; 
-        }
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #121212; color: white; }
+        #eggList { margin-top: 20px; }
+        .egg { margin: 10px; padding: 10px; border: 1px solid #ccc; display: inline-block; }
+        img { max-width: 100px; }
+        input[type="text"] { padding: 5px; width: 250px; }
+        button { padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
     </style>
 </head>
 <body>
     <h1>No Omelettes Here</h1>
     <p>Helping eggs, not frying them!</p>
-    <p>Submit your Dragon Cave egg URLs below.</p>
+    <p>Submit your Dragon Cave eggs below.</p>
     
     <form id="eggForm">
-        <input type="text" id="eggURL" placeholder="Enter egg URL (e.g., https://dragcave.net/view/[eggID])" required>
+        <input type="text" id="eggURL" placeholder="Enter egg/hatchling URL" required>
         <button type="submit">Add Egg</button>
     </form>
     
     <div id="eggList"></div>
     
     <script>
-        // Load eggs from localStorage
-        function loadEggs() {
-            const storedEggs = JSON.parse(localStorage.getItem('eggs')) || [];
-            storedEggs.forEach(egg => {
-                console.log('Loaded egg:', egg.url); // Debugging: Log loaded eggs
-                displayEgg(egg.url);
-            });
+        // Function to extract the egg ID from the URL
+        function getEggIDFromURL(url) {
+            const regex = /view\/([A-Za-z0-9]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
         }
 
-        // Function to display an egg
+        // Function to display the egg
         function displayEgg(url) {
             console.log("Adding egg:", url);  // Debugging: Log the URL
 
@@ -102,6 +54,12 @@
                 const img = document.createElement('img');
                 img.src = eggImageURL;  // Generated egg image URL
                 img.alt = "Egg Image";
+                
+                // Add an error event listener to handle missing images
+                img.onerror = function() {
+                    console.error("Egg image not found, using placeholder.");
+                    img.src = "https://via.placeholder.com/100?text=No+Image"; // Fallback image
+                };
 
                 // Create a link to the egg
                 const eggLink = document.createElement('a');
@@ -120,35 +78,15 @@
             }
         }
 
-        // Function to get egg ID from URL (updated for alphanumeric IDs)
-        function getEggIDFromURL(url) {
-            const match = url.match(/\/view\/([a-zA-Z0-9]+)/);
-            return match ? match[1] : null;  // Return the egg ID (alphanumeric ID) or null if not valid
-        }
-
-        // Event listener for form submission
+        // Event listener for the form submission
         document.getElementById('eggForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const url = document.getElementById('eggURL').value;
-
-            console.log("Submitted egg URL:", url);  // Debugging: Log the submitted URL
-
             if (url) {
-                // Display the new egg immediately
-                displayEgg(url);
-
-                // Save the egg to localStorage
-                const storedEggs = JSON.parse(localStorage.getItem('eggs')) || [];
-                storedEggs.push({ url: url });
-                localStorage.setItem('eggs', JSON.stringify(storedEggs));
-
-                // Clear the input field
-                document.getElementById('eggURL').value = '';
+                displayEgg(url);  // Display the egg when the form is submitted
+                document.getElementById('eggURL').value = '';  // Clear the input field
             }
         });
-
-        // Load eggs when the page loads
-        window.onload = loadEggs;
     </script>
 </body>
 </html>
