@@ -17,7 +17,7 @@
     <p>Submit your Dragon Cave eggs below.</p>
     
     <form id="eggForm">
-        <input type="text" id="eggURL" placeholder="Enter egg/hatchling URL" required>
+        <input type="text" id="eggURL" placeholder="Enter egg image URL" required>
         <button type="submit">Add Egg</button>
     </form>
     
@@ -27,61 +27,35 @@
         document.getElementById('eggForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const url = document.getElementById('eggURL').value;
-            console.log('Submitted URL:', url);  // Debugging log
+            console.log('Submitted Image URL:', url);  // Debugging log
 
             if (url) {
                 const eggList = document.getElementById('eggList');
                 const eggDiv = document.createElement('div');
                 eggDiv.className = 'egg';
 
-                // Get the egg ID from the URL
-                const eggID = getEggIDFromURL(url);
-                console.log('Extracted Egg ID:', eggID);  // Debugging log
+                // Create the image element with the user-provided URL
+                const img = document.createElement('img');
+                img.src = url;  // User-provided image URL
+                img.alt = "Egg Image";
+
+                // Create a link to the egg (if desired)
+                const eggLink = document.createElement('a');
+                eggLink.href = url;
+                eggLink.target = "_blank";
+                eggLink.textContent = url;
+
+                // Append the image and link to the eggDiv
+                eggDiv.appendChild(img);
+                eggDiv.appendChild(eggLink);
+
+                // Append eggDiv to the list
+                eggList.appendChild(eggDiv);
                 
-                if (eggID) {
-                    // Use a CORS proxy to bypass the CORS issue
-                    fetch(`https://cors-anywhere.herokuapp.com/https://api.dragcave.net/eggs/${eggID}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('API Data:', data);  // Debugging log
-                            // Create the image element with the egg image URL
-                            const img = document.createElement('img');
-                            img.src = data.image_url;  // API returns the image URL
-                            img.alt = "Egg Image";
-
-                            // Create a link to the egg
-                            const eggLink = document.createElement('a');
-                            eggLink.href = url;
-                            eggLink.target = "_blank";
-                            eggLink.textContent = url;
-
-                            // Append the image and link to the eggDiv
-                            eggDiv.appendChild(img);
-                            eggDiv.appendChild(eggLink);
-
-                            // Append eggDiv to the list
-                            eggList.appendChild(eggDiv);
-                        })
-                        .catch(error => {
-                            console.error('Error fetching egg data:', error);
-                        });
-                } else {
-                    console.log('Invalid egg ID format');
-                }
-
                 // Clear the input
                 document.getElementById('eggURL').value = '';
             }
         });
-
-        // Function to extract egg ID from the URL
-        function getEggIDFromURL(url) {
-            const match = url.match(/\/view\/(\d+)/);
-            if (match) {
-                return match[1];  // Return the egg ID (numeric ID)
-            }
-            return null;  // Return null if the URL format is incorrect
-        }
     </script>
 </body>
 </html>
