@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Omelettes Here</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #eggList { margin-top: 20px; }
+        .egg { margin: 10px; padding: 10px; border: 1px solid #ccc; display: inline-block; }
+    </style>
+</head>
+<body>
+    <h1>No Omelettes Here</h1>
+    <p>Helping eggs, not frying them!</p>
+    <p>Submit your Dragon Cave eggs below.</p>
+    
+    <form id="eggForm">
+        <input type="text" id="eggURL" placeholder="Enter egg/hatchling URL" required>
+        <button type="submit">Add Egg</button>
+    </form>
+    
+    <div id="eggList"></div>
+    
+    <script>
+        document.getElementById('eggForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = document.getElementById('eggURL').value;
+            if (url) {
+                const eggList = document.getElementById('eggList');
+                const eggDiv = document.createElement('div');
+                eggDiv.className = 'egg';
+                eggDiv.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
+                eggList.appendChild(eggDiv);
+                document.getElementById('eggURL').value = '';
+            }
+        });
+    </script>
+</body>
+</html>
