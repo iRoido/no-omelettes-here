@@ -1,92 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>No Omelettes Here</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #121212; color: white; }
-        #eggList { margin-top: 20px; }
-        .egg { margin: 10px; padding: 10px; border: 1px solid #ccc; display: inline-block; }
-        img { max-width: 100px; }
-        input[type="text"] { padding: 5px; width: 250px; }
-        button { padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-    </style>
-</head>
-<body>
-    <h1>No Omelettes Here</h1>
-    <p>Helping eggs, not frying them!</p>
-    <p>Submit your Dragon Cave eggs below.</p>
+// Function to load egg image
+function loadEggImage(eggLink) {
+    const img = document.createElement("img");
+    const eggId = eggLink.split('/').pop();  // Extract the egg ID (e.g., sXB3Z)
     
-    <form id="eggForm">
-        <input type="text" id="eggURL" placeholder="Enter egg/hatchling URL" required>
-        <button type="submit">Add Egg</button>
-    </form>
+    // Construct the image URL using the egg ID
+    const imageUrl = `https://dragcave.net/images/eggs/${eggId}.gif`;
     
-    <div id="eggList"></div>
+    img.src = imageUrl;  // Set the image source
     
-    <script>
-        // Function to extract the egg ID from the URL
-        function getEggIDFromURL(url) {
-            const regex = /view\/([A-Za-z0-9]+)/;
-            const match = url.match(regex);
-            return match ? match[1] : null;
-        }
+    // Handle the error when the image cannot be loaded
+    img.onerror = function() {
+        console.error(`Egg image not found for ${eggId}, using fallback.`);
+        img.src = "fallback.png";  // Local fallback image, change if necessary
+        img.alt = "No Image Available";
+        img.style.backgroundColor = "#ccc";  // Optional styling
+        img.style.textAlign = "center";      // Center the text
+        img.style.lineHeight = "100px";      // Adjust text positioning
+        img.style.fontSize = "20px";         // Make the fallback text large
+        img.innerText = "No Image Available";  // Text to show if image not found
+    };
 
-        // Function to display the egg
-        function displayEgg(url) {
-            console.log("Adding egg:", url);  // Debugging: Log the URL
+    img.alt = `Egg ID: ${eggId}`;  // Set the alt text for the image
+    document.body.appendChild(img);  // Example: Append the image to the body (can be customized)
+}
 
-            const eggList = document.getElementById('eggList');
-            const eggDiv = document.createElement('div');
-            eggDiv.className = 'egg';
+// Function to load multiple eggs
+function loadMultipleEggs(eggLinks) {
+    eggLinks.forEach(eggLink => {
+        loadEggImage(eggLink);  // Call loadEggImage for each egg link
+    });
+}
 
-            // Get the egg ID from the URL
-            const eggID = getEggIDFromURL(url);
-            console.log("Egg ID:", eggID);  // Debugging: Log the extracted egg ID
+// Example usage: Load eggs
+const eggLinks = [
+    "https://dragcave.net/view/sXB3Z",  // Replace with actual egg links
+    "https://dragcave.net/view/abc123",  // Another example egg link
+    "https://dragcave.net/view/xyz456"   // Add more egg links as needed
+];
 
-            if (eggID) {
-                const eggImageURL = `https://dragcave.net/images/eggs/${eggID}.gif`; // Changed to .gif
-                console.log("Egg image URL:", eggImageURL);  // Debugging: Log the egg image URL
-
-                // Create the image element with the egg image URL
-                const img = document.createElement('img');
-                img.src = eggImageURL;  // Generated egg image URL
-                img.alt = "Egg Image";
-                
-                // Add an error event listener to handle missing images
-                img.onerror = function() {
-                    console.error("Egg image not found, using placeholder.");
-                    img.src = "https://via.placeholder.com/100?text=No+Image"; // Fallback image
-                };
-
-                // Create a link to the egg
-                const eggLink = document.createElement('a');
-                eggLink.href = url;
-                eggLink.target = "_blank";
-                eggLink.textContent = url;
-
-                // Append the image and link to the eggDiv
-                eggDiv.appendChild(img);
-                eggDiv.appendChild(eggLink);
-
-                // Append eggDiv to the list
-                eggList.appendChild(eggDiv);
-            } else {
-                console.error("Invalid egg URL or ID");  // Debugging: Log if the ID is not valid
-            }
-        }
-
-        // Event listener for the form submission
-        document.getElementById('eggForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const url = document.getElementById('eggURL').value;
-            if (url) {
-                displayEgg(url);  // Display the egg when the form is submitted
-                document.getElementById('eggURL').value = '';  // Clear the input field
-            }
-        });
-    </script>
-</body>
-</html>
+// Load the eggs from the array of links
+loadMultipleEggs(eggLinks);
