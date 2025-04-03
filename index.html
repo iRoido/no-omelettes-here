@@ -83,15 +83,19 @@
 
         // Function to display an egg
         function displayEgg(url) {
+            console.log("Adding egg:", url);  // Debugging: Log the URL
+
             const eggList = document.getElementById('eggList');
             const eggDiv = document.createElement('div');
             eggDiv.className = 'egg';
 
             // Get the egg ID from the URL
             const eggID = getEggIDFromURL(url);
+            console.log("Egg ID:", eggID);  // Debugging: Log the extracted egg ID
 
             if (eggID) {
                 const eggImageURL = `https://dragcave.net/images/eggs/${eggID}.png`;
+                console.log("Egg image URL:", eggImageURL);  // Debugging: Log the egg image URL
 
                 // Create the image element with the egg image URL
                 const img = document.createElement('img');
@@ -110,16 +114,15 @@
 
                 // Append eggDiv to the list
                 eggList.appendChild(eggDiv);
+            } else {
+                console.error("Invalid egg URL or ID");  // Debugging: Log if the ID is not valid
             }
         }
 
         // Function to get egg ID from URL
         function getEggIDFromURL(url) {
             const match = url.match(/\/view\/(\d+)/);
-            if (match) {
-                return match[1];  // Return the egg ID (numeric ID)
-            }
-            return null;
+            return match ? match[1] : null;  // Return the egg ID (numeric ID) or null if not valid
         }
 
         // Event listener for form submission
