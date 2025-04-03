@@ -1,42 +1,66 @@
-// Function to load egg image
-function loadEggImage(eggLink) {
-    const img = document.createElement("img");
-    const eggId = eggLink.split('/').pop();  // Extract the egg ID (e.g., sXB3Z)
-    
-    // Construct the image URL using the egg ID
-    const imageUrl = `https://dragcave.net/images/eggs/${eggId}.gif`;
-    
-    img.src = imageUrl;  // Set the image source
-    
-    // Handle the error when the image cannot be loaded
-    img.onerror = function() {
-        console.error(`Egg image not found for ${eggId}, using fallback.`);
-        img.src = "fallback.png";  // Local fallback image, change if necessary
-        img.alt = "No Image Available";
-        img.style.backgroundColor = "#ccc";  // Optional styling
-        img.style.textAlign = "center";      // Center the text
-        img.style.lineHeight = "100px";      // Adjust text positioning
-        img.style.fontSize = "20px";         // Make the fallback text large
-        img.innerText = "No Image Available";  // Text to show if image not found
-    };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egg Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        img {
+            margin: 10px;
+            max-width: 150px;
+            max-height: 150px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
 
-    img.alt = `Egg ID: ${eggId}`;  // Set the alt text for the image
-    document.body.appendChild(img);  // Example: Append the image to the body (can be customized)
-}
+    <h1>Egg Viewer</h1>
+    <p>Egg images will appear below:</p>
 
-// Function to load multiple eggs
-function loadMultipleEggs(eggLinks) {
-    eggLinks.forEach(eggLink => {
-        loadEggImage(eggLink);  // Call loadEggImage for each egg link
-    });
-}
+    <script>
+        // Function to load egg image
+        function loadEggImage(eggLink) {
+            const img = document.createElement("img");
+            const eggId = eggLink.split('/').pop(); // Extract the egg ID (e.g., sXB3Z)
 
-// Example usage: Load eggs
-const eggLinks = [
-    "https://dragcave.net/view/sXB3Z",  // Replace with actual egg links
-    "https://dragcave.net/view/abc123",  // Another example egg link
-    "https://dragcave.net/view/xyz456"   // Add more egg links as needed
-];
+            // Construct the image URL using the egg ID
+            const imageUrl = `https://dragcave.net/images/eggs/${eggId}.gif`;
 
-// Load the eggs from the array of links
-loadMultipleEggs(eggLinks);
+            img.src = imageUrl; // Set the image source
+            
+            // Set the alt text for the image
+            img.alt = `Egg ID: ${eggId}`;
+            
+            // Append the image to the document (can be customized as needed)
+            document.body.appendChild(img);
+        }
+
+        // Function to load multiple eggs
+        function loadMultipleEggs(eggLinks) {
+            eggLinks.forEach(eggLink => {
+                loadEggImage(eggLink); // Call loadEggImage for each egg link
+            });
+        }
+
+        // Example usage: Load eggs
+        const eggLinks = [
+            "https://dragcave.net/view/sXB3Z", // Replace with actual egg links
+            "https://dragcave.net/view/abc123", // Another example egg link
+            "https://dragcave.net/view/xyz456"  // Add more egg links as needed
+        ];
+
+        // Load the eggs from the array of links
+        loadMultipleEggs(eggLinks);
+    </script>
+
+</body>
+</html>
