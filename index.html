@@ -27,6 +27,7 @@
         document.getElementById('eggForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const url = document.getElementById('eggURL').value;
+            console.log('Submitted URL:', url);  // Debugging log
 
             if (url) {
                 const eggList = document.getElementById('eggList');
@@ -35,12 +36,14 @@
 
                 // Get the egg ID from the URL
                 const eggID = getEggIDFromURL(url);
+                console.log('Extracted Egg ID:', eggID);  // Debugging log
                 
                 if (eggID) {
                     // Use a CORS proxy to bypass the CORS issue
                     fetch(`https://cors-anywhere.herokuapp.com/https://api.dragcave.net/eggs/${eggID}`)
                         .then(response => response.json())
                         .then(data => {
+                            console.log('API Data:', data);  // Debugging log
                             // Create the image element with the egg image URL
                             const img = document.createElement('img');
                             img.src = data.image_url;  // API returns the image URL
@@ -62,6 +65,8 @@
                         .catch(error => {
                             console.error('Error fetching egg data:', error);
                         });
+                } else {
+                    console.log('Invalid egg ID format');
                 }
 
                 // Clear the input
