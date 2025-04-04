@@ -59,9 +59,10 @@
     <div id="eggList"></div>
     
     <script>
-        // Ensure the script is loaded and then initialize Supabase
-        window.onload = function() {
-            const supabase = supabase.createClient(
+        // Ensure the script is loaded, then initialize Supabase
+        window.addEventListener('load', function() {
+            // Initialize the Supabase client
+            const supabase = Supabase.createClient(
                 'https://ezpeahjdrqjrcgbazxhc.supabase.co', 
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6cGVhaGpkcnFqcmNnYmF6eGhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MjQ2OTcsImV4cCI6MjA1OTMwMDY5N30.b19NYlnB2sg-IsI4C9TPTMgIcYDCkTqghOoAsi9UoGg'
             );
@@ -107,7 +108,7 @@
                     insertEgg(); // Call insert function
                 }
             });
-        };
+        });
     </script>
 </body>
 </html>
