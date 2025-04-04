@@ -35,10 +35,11 @@
                 const eggId = url.split('/').pop();
                 const imageUrl = `https://dragcave.net/image/${eggId}.gif`;
 
-                // Create the HTML for the egg entry
+                // Create the HTML for the egg entry with the image as a clickable link
                 eggDiv.innerHTML = `
-                    <a href="${url}" target="_blank">${url}</a><br>
-                    <img src="${imageUrl}" alt="Egg Image" style="width: 100px; height: auto;">
+                    <a href="${url}" target="_blank">
+                        <img src="${imageUrl}" alt="Egg Image">
+                    </a>
                 `;
                 
                 eggList.appendChild(eggDiv);
