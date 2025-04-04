@@ -59,52 +59,55 @@
     <div id="eggList"></div>
     
     <script>
-        // Correctly initialize the Supabase client
-        const supabase = supabase.createClient(
-            'https://ezpeahjdrqjrcgbazxhc.supabase.co', 
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6cGVhaGpkcnFqcmNnYmF6eGhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MjQ2OTcsImV4cCI6MjA1OTMwMDY5N30.b19NYlnB2sg-IsI4C9TPTMgIcYDCkTqghOoAsi9UoGg'
-        );
+        // Ensure the script is loaded and then initialize Supabase
+        window.onload = function() {
+            const supabase = supabase.createClient(
+                'https://ezpeahjdrqjrcgbazxhc.supabase.co', 
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6cGVhaGpkcnFqcmNnYmF6eGhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MjQ2OTcsImV4cCI6MjA1OTMwMDY5N30.b19NYlnB2sg-IsI4C9TPTMgIcYDCkTqghOoAsi9UoGg'
+            );
 
-        document.getElementById('eggForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const url = document.getElementById('eggURL').value;
-            if (url) {
-                const eggList = document.getElementById('eggList');
-                const eggDiv = document.createElement('div');
-                eggDiv.className = 'egg';
-                
-                // Extract egg ID from the URL and create the image URL
-                const eggId = url.split('/').pop();
-                const imageUrl = `https://dragcave.net/image/${eggId}.gif`;
+            // Handle the form submission
+            document.getElementById('eggForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const url = document.getElementById('eggURL').value;
+                if (url) {
+                    const eggList = document.getElementById('eggList');
+                    const eggDiv = document.createElement('div');
+                    eggDiv.className = 'egg';
+                    
+                    // Extract egg ID from the URL and create the image URL
+                    const eggId = url.split('/').pop();
+                    const imageUrl = `https://dragcave.net/image/${eggId}.gif`;
 
-                // Create the HTML for the egg entry with the image as a clickable link
-                eggDiv.innerHTML = `
-                    <a href="${url}" target="_blank">
-                        <img src="${imageUrl}" alt="Egg Image">
-                    </a>
-                `;
-                
-                eggList.appendChild(eggDiv);
-                document.getElementById('eggURL').value = '';  // Clear the input field
+                    // Create the HTML for the egg entry with the image as a clickable link
+                    eggDiv.innerHTML = `
+                        <a href="${url}" target="_blank">
+                            <img src="${imageUrl}" alt="Egg Image">
+                        </a>
+                    `;
+                    
+                    eggList.appendChild(eggDiv);
+                    document.getElementById('eggURL').value = '';  // Clear the input field
 
-                // Insert the URL into the Supabase database
-                async function insertEgg() {
-                    const { data, error } = await supabase
-                        .from('eggs')
-                        .insert([
-                            { egg_url: url }
-                        ]);
+                    // Insert the URL into the Supabase database
+                    async function insertEgg() {
+                        const { data, error } = await supabase
+                            .from('eggs')
+                            .insert([
+                                { egg_url: url }
+                            ]);
 
-                    if (error) {
-                        console.error("Error inserting egg:", error);
-                    } else {
-                        console.log("Egg inserted successfully:", data);
+                        if (error) {
+                            console.error("Error inserting egg:", error);
+                        } else {
+                            console.log("Egg inserted successfully:", data);
+                        }
                     }
-                }
 
-                insertEgg(); // Call insert function
-            }
-        });
+                    insertEgg(); // Call insert function
+                }
+            });
+        };
     </script>
 </body>
 </html>
