@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>No Omelettes Here</title>
@@ -45,6 +44,8 @@
             background-color: #555;  /* Lighter button on hover */
         }
     </style>
+    <!-- Load Supabase client script here -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.35.0/dist/umd/supabase.min.js"></script>
 </head>
 <body>
     <h1>No Omelettes Here</h1>
@@ -59,10 +60,10 @@
     <div id="eggList"></div>
 
     <script>
-        // Initialize the Supabase client with your project's URL and public key
+        // Now that the Supabase client is loaded, initialize it
         const supabaseUrl = 'https://ezpeahjdrqjrcgbazxhc.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6cGVhaGpkcnFqcmNnYmF6eGhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MjQ2OTcsImV4cCI6MjA1OTMwMDY5N30.b19NYlnB2sg-IsI4C9TPTMgIcYDCkTqghOoAsi9UoGg';
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);  // Initialize the Supabase client
 
         // Handle form submission
         document.getElementById('eggForm').addEventListener('submit', async function(event) {
