@@ -5,9 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>No Omelettes Here</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        #eggList { margin-top: 20px; }
-        .egg { margin: 10px; padding: 10px; border: 1px solid #ccc; display: inline-block; }
+        /* Dark mode styles */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #121212;  /* Dark background */
+            color: #fff;  /* Light text */
+        }
+        #eggList {
+            margin-top: 20px;
+        }
+        .egg {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #444;  /* Dark border */
+            display: inline-block;
+            background-color: #1e1e1e;  /* Slightly lighter dark background */
+            border-radius: 8px;
+        }
+        input, button {
+            padding: 8px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+        input {
+            background-color: #333;
+            border: 1px solid #555;
+            color: #fff;
+        }
+        button {
+            background-color: #444;
+            border: 1px solid #555;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #555;  /* Lighter button on hover */
+        }
     </style>
 </head>
 <body>
