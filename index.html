@@ -96,9 +96,11 @@
       if (error) {
         console.error('Error fetching eggs:', error);
       } else if (data) {
-        data.forEach(row => {
-          addEggToPage(row.url);
-        });
+        data
+          .filter(row => row.url.includes('/view/'))  // Only add valid egg URLs
+          .forEach(row => {
+            addEggToPage(row.url);
+          });
       }
     }
 
@@ -106,6 +108,11 @@
     document.getElementById('eggForm').addEventListener('submit', async function(event) {
       event.preventDefault();
       const url = document.getElementById('eggURL').value;
+      // Validate: only accept URLs that include "/view/"
+      if (!url.includes('/view/')) {
+        alert("Please enter a valid Dragon Cave egg URL (must include '/view/').");
+        return;
+      }
       if (url) {
         // Insert the egg URL into the Supabase "eggs" table
         const { data, error } = await supabaseClient
