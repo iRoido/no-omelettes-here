@@ -1,50 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>No Omelettes Here</title>
     <style>
-        /* Dark mode styles */
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #121212;  /* Dark background */
-            color: #fff;  /* Light text */
-        }
-        #eggList {
-            margin-top: 20px;
-        }
-        .egg {
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #444;  /* Dark border */
-            display: inline-block;
-            background-color: #1e1e1e;  /* Slightly lighter dark background */
-            border-radius: 8px;
-        }
-        input, button {
-            padding: 8px;
-            margin: 10px;
-            font-size: 16px;
-            border-radius: 4px;
-        }
-        input {
-            background-color: #333;
-            border: 1px solid #555;
-            color: #fff;
-        }
-        button {
-            background-color: #444;
-            border: 1px solid #555;
-            color: #fff;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #555;  /* Lighter button on hover */
-        }
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #121212; color: white; }
+        #eggList { margin-top: 20px; }
+        .egg { margin: 10px; padding: 10px; border: 1px solid #ccc; display: inline-block; }
+        img { max-width: 100px; height: auto; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
     <h1>No Omelettes Here</h1>
@@ -57,51 +23,51 @@
     </form>
     
     <div id="eggList"></div>
-    
-    <script>
-        // Initialize Supabase client
-        const supabase = Supabase.createClient('https://ezpeahjdrqjrcgbazxhc.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6cGVhaGpkcnFqcmNnYmF6eGhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MjQ2OTcsImV4cCI6MjA1OTMwMDY5N30.b19NYlnB2sg-IsI4C9TPTMgIcYDCkTqghOoAsi9UoGg');
 
-        document.getElementById('eggForm').addEventListener('submit', function(event) {
+    <script>
+        const supabase = supabase.createClient('https://ezpeahjdrqjrcgbazxhc.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6cGVhaGpkcnFqcmNnYmF6eGhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MjQ2OTcsImV4cCI6MjA1OTMwMDY5N30.b19NYlnB2sg-IsI4C9TPTMgIcYDCkTqghOoAsi9UoGg');
+        
+        document.getElementById('eggForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const url = document.getElementById('eggURL').value;
             if (url) {
-                const eggList = document.getElementById('eggList');
-                const eggDiv = document.createElement('div');
-                eggDiv.className = 'egg';
-                
-                // Extract egg ID from the URL and create the image URL
-                const eggId = url.split('/').pop();
-                const imageUrl = `https://dragcave.net/image/${eggId}.gif`;
+                const { data, error } = await supabase
+                    .from('eggs')
+                    .insert([{ url: url }]);
 
-                // Create the HTML for the egg entry with the image as a clickable link
-                eggDiv.innerHTML = `
-                    <a href="${url}" target="_blank">
-                        <img src="${imageUrl}" alt="Egg Image">
-                    </a>
-                `;
-                
-                eggList.appendChild(eggDiv);
-                document.getElementById('eggURL').value = '';  // Clear the input field
-
-                // Insert the URL into the Supabase database
-                async function insertEgg() {
-                    const { data, error } = await supabase
-                        .from('eggs')
-                        .insert([
-                            { egg_url: url }
-                        ]);
-
-                    if (error) {
-                        console.error("Error inserting egg:", error);
-                    } else {
-                        console.log("Egg inserted successfully:", data);
-                    }
+                if (error) {
+                    console.error('Error inserting egg:', error);
+                } else {
+                    const eggList = document.getElementById('eggList');
+                    const eggDiv = document.createElement('div');
+                    eggDiv.className = 'egg';
+                    eggDiv.innerHTML = `<a href="${url}" target="_blank"><img src="https://dragcave.net/image/${data[0].id}.gif" alt="Egg" /></a>`;
+                    eggList.appendChild(eggDiv);
                 }
 
-                insertEgg(); // Call insert function
+                document.getElementById('eggURL').value = '';
             }
         });
+
+        async function loadEggs() {
+            const { data, error } = await supabase
+                .from('eggs')
+                .select('*');
+
+            if (error) {
+                console.error('Error fetching eggs:', error);
+            } else {
+                const eggList = document.getElementById('eggList');
+                data.forEach(egg => {
+                    const eggDiv = document.createElement('div');
+                    eggDiv.className = 'egg';
+                    eggDiv.innerHTML = `<a href="https://dragcave.net/view/${egg.id}" target="_blank"><img src="https://dragcave.net/image/${egg.id}.gif" alt="Egg" /></a>`;
+                    eggList.appendChild(eggDiv);
+                });
+            }
+        }
+
+        window.onload = loadEggs;
     </script>
 </body>
 </html>
