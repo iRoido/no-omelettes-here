@@ -3,64 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egg Viewer</title>
+    <title>No Omelettes Here</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 0;
-            padding: 20px;
-        }
-        img {
-            margin: 10px;
-            max-width: 150px;
-            max-height: 150px;
-            border: 1px solid #ccc;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #eggList { margin-top: 20px; }
+        .egg { margin: 10px; padding: 10px; border: 1px solid #ccc; display: inline-block; }
+        .egg img { width: 100px; height: auto; margin-bottom: 10px; }
     </style>
 </head>
 <body>
-
-    <h1>Egg Viewer</h1>
-    <p>Egg images will appear below:</p>
-
+    <h1>No Omelettes Here</h1>
+    <p>Helping eggs, not frying them!</p>
+    <p>Submit your Dragon Cave eggs below.</p>
+    
+    <form id="eggForm">
+        <input type="text" id="eggURL" placeholder="Enter egg/hatchling URL" required>
+        <button type="submit">Add Egg</button>
+    </form>
+    
+    <div id="eggList"></div>
+    
     <script>
-        // Function to load egg image
-        function loadEggImage(eggLink) {
-            const img = document.createElement("img");
-            const eggId = eggLink.split('/').pop(); // Extract the egg ID (e.g., sXB3Z)
-
-            // Construct the image URL using the egg ID
-            const imageUrl = `https://dragcave.net/images/eggs/${eggId}.gif`;
-
-            img.src = imageUrl; // Set the image source
+        document.getElementById('eggForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = document.getElementById('eggURL').value;
             
-            // Set the alt text for the image
-            img.alt = `Egg ID: ${eggId}`;
-            
-            // Append the image to the document (can be customized as needed)
-            document.body.appendChild(img);
-        }
+            if (url) {
+                const eggId = url.split('/').pop();  // Extract the egg ID (e.g., sXB3Z from https://dragcave.net/view/sXB3Z)
+                const imageUrl = `https://dragcave.net/images/eggs/${eggId}.gif`;  // Create the image URL based on the egg ID
 
-        // Function to load multiple eggs
-        function loadMultipleEggs(eggLinks) {
-            eggLinks.forEach(eggLink => {
-                loadEggImage(eggLink); // Call loadEggImage for each egg link
-            });
-        }
+                const eggList = document.getElementById('eggList');
+                const eggDiv = document.createElement('div');
+                eggDiv.className = 'egg';
+                eggDiv.innerHTML = `
+                    <a href="${url}" target="_blank">${url}</a>
+                    <br>
+                    <img src="${imageUrl}" alt="Egg Image: ${eggId}" onerror="this.onerror=null;this.src='fallback.png';">
+                `;
+                eggList.appendChild(eggDiv);
 
-        // Example usage: Load eggs
-        const eggLinks = [
-            "https://dragcave.net/view/sXB3Z", // Replace with actual egg links
-            "https://dragcave.net/view/abc123", // Another example egg link
-            "https://dragcave.net/view/xyz456"  // Add more egg links as needed
-        ];
-
-        // Load the eggs from the array of links
-        loadMultipleEggs(eggLinks);
+                // Clear the input field after adding the egg
+                document.getElementById('eggURL').value = '';
+            }
+        });
     </script>
-
 </body>
 </html>
