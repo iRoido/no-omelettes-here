@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Load Supabase JS SDK from CDN (we'll use version 2.9.0 here) -->
+  <!-- Load Supabase JS SDK from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.9.0/dist/umd/supabase.min.js"></script>
   
   <meta charset="UTF-8">
@@ -63,8 +63,7 @@
   <div id="eggList"></div>
   
   <script>
-    // Initialize Supabase client using the global "supabase" from the CDN.
-    // We use a new variable name (supabaseClient) to avoid confusion.
+    // Initialize the Supabase client using your project URL and public anon key
     const supabaseUrl = 'https://ezpeahjdrqjrcgbazxhc.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6cGVhaGpkcnFqcmNnYmF6eGhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MjQ2OTcsImV4cCI6MjA1OTMwMDY5N30.b19NYlnB2sg-IsI4C9TPTMgIcYDCkTqghOoAsi9UoGg';
     const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -93,12 +92,12 @@
     async function fetchEggs() {
       const { data, error } = await supabaseClient
         .from('eggs')
-        .select('egg_url');
+        .select('url');
       if (error) {
         console.error('Error fetching eggs:', error);
       } else if (data) {
         data.forEach(row => {
-          addEggToPage(row.egg_url);
+          addEggToPage(row.url);
         });
       }
     }
@@ -111,7 +110,7 @@
         // Insert the egg URL into the Supabase "eggs" table
         const { data, error } = await supabaseClient
           .from('eggs')
-          .insert([{ egg_url: url }]);
+          .insert([{ url: url }]);
         if (error) {
           console.error('Error inserting egg:', error);
         } else {
