@@ -8,7 +8,6 @@
         body { font-family: Arial, sans-serif; text-align: center; }
         #eggList { margin-top: 20px; }
         .egg { margin: 10px; padding: 10px; border: 1px solid #ccc; display: inline-block; }
-        .egg img { width: 100px; height: auto; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -27,23 +26,23 @@
         document.getElementById('eggForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const url = document.getElementById('eggURL').value;
-            
             if (url) {
-                const eggId = url.split('/').pop();  // Extract the egg ID (e.g., sXB3Z from https://dragcave.net/view/sXB3Z)
-                const imageUrl = `https://dragcave.net/images/eggs/${eggId}.gif`;  // Create the image URL based on the egg ID
-
                 const eggList = document.getElementById('eggList');
                 const eggDiv = document.createElement('div');
                 eggDiv.className = 'egg';
-                eggDiv.innerHTML = `
-                    <a href="${url}" target="_blank">${url}</a>
-                    <br>
-                    <img src="${imageUrl}" alt="Egg Image: ${eggId}" onerror="this.onerror=null;this.src='fallback.png';">
-                `;
-                eggList.appendChild(eggDiv);
+                
+                // Extract egg ID from the URL and create the image URL
+                const eggId = url.split('/').pop();
+                const imageUrl = `https://dragcave.net/image/${eggId}.gif`;
 
-                // Clear the input field after adding the egg
-                document.getElementById('eggURL').value = '';
+                // Create the HTML for the egg entry
+                eggDiv.innerHTML = `
+                    <a href="${url}" target="_blank">${url}</a><br>
+                    <img src="${imageUrl}" alt="Egg Image" style="width: 100px; height: auto;">
+                `;
+                
+                eggList.appendChild(eggDiv);
+                document.getElementById('eggURL').value = '';  // Clear the input field
             }
         });
     </script>
