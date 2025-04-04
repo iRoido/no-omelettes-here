@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Correct script for Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.9.0/dist/umd/supabase.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>No Omelettes Here</title>
@@ -52,27 +50,34 @@
     <h1>No Omelettes Here</h1>
     <p>Helping eggs, not frying them!</p>
     <p>Submit your Dragon Cave eggs below.</p>
-    
+
     <form id="eggForm">
         <input type="text" id="eggURL" placeholder="Enter egg/hatchling URL" required>
         <button type="submit">Add Egg</button>
     </form>
-    
-    <div id="eggList"></div>
-    
-    <script>
-        // Initialize Supabase once the script is loaded and the page is ready
-        window.onload = () => {
-            const supabase = Supabase.createClient(
-                'https://ezpeahjdrqjrcgbazxhc.supabase.co',
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6cGVhaGpkcnFqcmNnYmF6eGhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MjQ2OTcsImV4cCI6MjA1OTMwMDY5N30.b19NYlnB2sg-IsI4C9TPTMgIcYDCkTqghOoAsi9UoGg'
-            );
 
-            // Handle the form submission
-            document.getElementById('eggForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                const url = document.getElementById('eggURL').value;
-                if (url) {
+    <div id="eggList"></div>
+
+    <script>
+        // Initialize the Supabase client with your project's URL and public key
+        const supabaseUrl = 'https://ezpeahjdrqjrcgbazxhc.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6cGVhaGpkcnFqcmNnYmF6eGhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MjQ2OTcsImV4cCI6MjA1OTMwMDY5N30.b19NYlnB2sg-IsI4C9TPTMgIcYDCkTqghOoAsi9UoGg';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        // Handle form submission
+        document.getElementById('eggForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const url = document.getElementById('eggURL').value;
+
+            if (url) {
+                // Insert the new egg URL into Supabase
+                const { data, error } = await supabase
+                    .from('eggs')
+                    .insert([{ egg_url: url }]);
+
+                if (error) {
+                    console.error('Error inserting egg:', error);
+                } else {
                     const eggList = document.getElementById('eggList');
                     const eggDiv = document.createElement('div');
                     eggDiv.className = 'egg';
@@ -87,29 +92,12 @@
                             <img src="${imageUrl}" alt="Egg Image">
                         </a>
                     `;
-                    
+
                     eggList.appendChild(eggDiv);
                     document.getElementById('eggURL').value = '';  // Clear the input field
-
-                    // Insert the URL into the Supabase database
-                    async function insertEgg() {
-                        const { data, error } = await supabase
-                            .from('eggs')
-                            .insert([
-                                { egg_url: url }
-                            ]);
-
-                        if (error) {
-                            console.error("Error inserting egg:", error);
-                        } else {
-                            console.log("Egg inserted successfully:", data);
-                        }
-                    }
-
-                    insertEgg(); // Call insert function
                 }
-            });
-        };
+            }
+        });
     </script>
 </body>
 </html>
